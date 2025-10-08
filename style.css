@@ -252,4 +252,19 @@ main {
     color: #d9534f;
     margin-top: 10px;
     min-height: 1.2em;
+
+}
+/* ... (todo o CSS anterior) ... */
+
+/* Estilo para o novo botão de deletar */
+.item-controles button.btn-deletar {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #333; /* Cor do ícone */
+}
+
+.item-controles button.btn-deletar:hover {
+    background-color: #d9534f; /* Vermelho */
+    color: white; /* Ícone fica branco */
+    border-color: #d43f3a;
 }
