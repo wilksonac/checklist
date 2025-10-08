@@ -107,9 +107,7 @@ function atualizarQuantidade(id, novaQuantidade) {
     }).catch(error => console.error("Erro ao atualizar o item: ", error));
 }
 
-// **NOVO** -> Função para deletar um item
 function deletarItem(id) {
-    // Pede confirmação ao usuário para evitar cliques acidentais
     if (confirm("Tem certeza que deseja excluir este item?")) {
         insumosCollection.doc(id).delete()
             .then(() => {
@@ -129,7 +127,16 @@ function renderizarItem(doc) {
     itemLi.className = 'item-insumo';
     itemLi.dataset.id = itemId;
 
-    // **ALTERAÇÃO** -> Adicionado o botão de deletar (ícone de lixeira)
+    // **NOVO** -> Lógica para aplicar classes de alerta visual
+    // Verificamos primeiro a condição mais crítica (vermelho)
+    if (item.categoria === 'permanente') {
+        if (item.quantidade < 2) { // 0 ou 1
+            itemLi.classList.add('nivel-critico');
+        } else if (item.quantidade < 3) { // 2
+            itemLi.classList.add('nivel-alerta');
+        }
+    }
+
     itemLi.innerHTML = `
         <div class="item-info">
             <div class="nome">${item.nome}</div>
@@ -146,7 +153,7 @@ function renderizarItem(doc) {
     const btnMenos = itemLi.querySelector('.btn-menos');
     const btnMais = itemLi.querySelector('.btn-mais');
     const inputQtde = itemLi.querySelector('input');
-    const btnDeletar = itemLi.querySelector('.btn-deletar'); // **NOVO** -> Pega a referência do botão
+    const btnDeletar = itemLi.querySelector('.btn-deletar');
 
     btnMenos.addEventListener('click', () => {
         const valorAtual = parseInt(inputQtde.value, 10);
@@ -158,11 +165,9 @@ function renderizarItem(doc) {
     });
     inputQtde.addEventListener('change', () => atualizarQuantidade(itemId, inputQtde.value));
 
-    // **NOVO** -> Adiciona o evento de clique ao botão de deletar
     btnDeletar.addEventListener('click', () => {
         deletarItem(itemId);
     });
-
 
     if (item.categoria === 'permanente') {
         listaPermanente.appendChild(itemLi);
