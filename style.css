@@ -268,3 +268,25 @@ main {
     color: white; /* Ícone fica branco */
     border-color: #d43f3a;
 }
+/* ... (todo o CSS anterior) ... */
+
+/* ========================================= */
+/* Estilos de Nível de Alerta para Itens     */
+/* ========================================= */
+
+.item-insumo.nivel-alerta {
+    background-color: #fffbe6; /* Amarelo claro */
+    border-left: 5px solid #ffc107; /* Borda amarela escura */
+}
+
+.item-insumo.nivel-critico {
+    background-color: #fff1f0; /* Vermelho/rosa claro */
+    border-left: 5px solid #f44336; /* Borda vermelha escura */
+}
+
+/* Garante que o hover não sobrescreva totalmente a cor de alerta */
+.item-insumo.nivel-alerta:hover,
+.item-insumo.nivel-critico:hover {
+    background-color: #f0f0f0;
+}
+
