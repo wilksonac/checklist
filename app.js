@@ -20,7 +20,7 @@ const firebaseConfig = {
 // Passo 2: Inicialização do Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const auth = firebase.auth(); // Inicializa o serviço de autenticação
+const auth = firebase.auth();
 const insumosCollection = db.collection('insumos');
 
 // Referências aos elementos de tela
@@ -39,66 +39,50 @@ const categoriaItemInput = document.getElementById('categoria-item');
 const listaPermanente = document.getElementById('lista-permanente');
 const listaVariavel = document.getElementById('lista-variavel');
 
-let unsubscribeFirestore = null; // Variável para guardar o listener do Firestore
+let unsubscribeFirestore = null;
 
 // --- LÓGICA DE AUTENTICAÇÃO ---
 
-// Gerencia o estado de autenticação em tempo real
 auth.onAuthStateChanged(user => {
     if (user) {
-        // Usuário está logado
         telaLogin.style.display = 'none';
         conteudoPrincipal.style.display = 'block';
         userEmailSpan.textContent = `Logado como: ${user.email}`;
-        
-        // Inicia o listener do Firestore APENAS quando o usuário está logado
         iniciarListenerFirestore();
     } else {
-        // Usuário está deslogado
         telaLogin.style.display = 'flex';
         conteudoPrincipal.style.display = 'none';
         userEmailSpan.textContent = '';
-        
-        // Para o listener do Firestore para não usar recursos desnecessários
         if (unsubscribeFirestore) {
             unsubscribeFirestore();
         }
-        // Limpa as listas
         listaPermanente.innerHTML = '';
         listaVariavel.innerHTML = '';
     }
 });
 
-// Evento de submit do formulário de login
 formLogin.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = loginEmailInput.value;
     const password = loginSenhaInput.value;
-    
     auth.signInWithEmailAndPassword(email, password)
         .then(userCredential => {
-            console.log("Login bem-sucedido!", userCredential.user);
             loginError.textContent = '';
             formLogin.reset();
         })
         .catch(error => {
-            console.error("Erro no login:", error);
             loginError.textContent = 'E-mail ou senha incorretos.';
         });
 });
 
-// Evento de clique no botão de logout
 btnLogout.addEventListener('click', () => {
-    auth.signOut().then(() => {
-        console.log("Usuário deslogado.");
-    });
+    auth.signOut();
 });
 
 
-// --- LÓGICA DO FIRESTORE (A mesma de antes, mas encapsulada) ---
+// --- LÓGICA DO FIRESTORE ---
 
 function iniciarListenerFirestore() {
-    // Escuta por alterações em tempo real
     unsubscribeFirestore = insumosCollection.orderBy('nome').onSnapshot(snapshot => {
         listaPermanente.innerHTML = '';
         listaVariavel.innerHTML = '';
@@ -123,6 +107,21 @@ function atualizarQuantidade(id, novaQuantidade) {
     }).catch(error => console.error("Erro ao atualizar o item: ", error));
 }
 
+// **NOVO** -> Função para deletar um item
+function deletarItem(id) {
+    // Pede confirmação ao usuário para evitar cliques acidentais
+    if (confirm("Tem certeza que deseja excluir este item?")) {
+        insumosCollection.doc(id).delete()
+            .then(() => {
+                console.log("Item deletado com sucesso!");
+            })
+            .catch(error => {
+                console.error("Erro ao deletar item: ", error);
+            });
+    }
+}
+
+
 function renderizarItem(doc) {
     const item = doc.data();
     const itemId = doc.id;
@@ -130,6 +129,7 @@ function renderizarItem(doc) {
     itemLi.className = 'item-insumo';
     itemLi.dataset.id = itemId;
 
+    // **ALTERAÇÃO** -> Adicionado o botão de deletar (ícone de lixeira)
     itemLi.innerHTML = `
         <div class="item-info">
             <div class="nome">${item.nome}</div>
@@ -139,12 +139,14 @@ function renderizarItem(doc) {
             <button class="btn-menos">-</button>
             <input type="number" value="${item.quantidade}" min="0">
             <button class="btn-mais">+</button>
+            <button class="btn-deletar">🗑️</button> 
         </div>
     `;
 
     const btnMenos = itemLi.querySelector('.btn-menos');
     const btnMais = itemLi.querySelector('.btn-mais');
     const inputQtde = itemLi.querySelector('input');
+    const btnDeletar = itemLi.querySelector('.btn-deletar'); // **NOVO** -> Pega a referência do botão
 
     btnMenos.addEventListener('click', () => {
         const valorAtual = parseInt(inputQtde.value, 10);
@@ -155,6 +157,12 @@ function renderizarItem(doc) {
         atualizarQuantidade(itemId, valorAtual + 1);
     });
     inputQtde.addEventListener('change', () => atualizarQuantidade(itemId, inputQtde.value));
+
+    // **NOVO** -> Adiciona o evento de clique ao botão de deletar
+    btnDeletar.addEventListener('click', () => {
+        deletarItem(itemId);
+    });
+
 
     if (item.categoria === 'permanente') {
         listaPermanente.appendChild(itemLi);
