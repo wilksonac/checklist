@@ -82,14 +82,50 @@ btnLogout.addEventListener('click', () => {
 // --- LÓGICA DO FIRESTORE ---
 
 function iniciarListenerFirestore() {
+    // A query original, ordenada por nome, continua a mesma
     unsubscribeFirestore = insumosCollection.orderBy('nome').onSnapshot(snapshot => {
+        // Limpa as listas antes de qualquer coisa
         listaPermanente.innerHTML = '';
         listaVariavel.innerHTML = '';
-        snapshot.docs.forEach(renderizarItem);
+
+        // **NOVA LÓGICA DE ORDENAÇÃO**
+        // 1. Cria arrays para separar os itens por status
+        const itemsPermanentes = {
+            critico: [], // Vermelho
+            alerta: [], // Amarelo
+            ok: []      // Verde
+        };
+        const itemsVariaveis = [];
+
+        // 2. Itera sobre os documentos e os distribui nos arrays corretos
+        snapshot.docs.forEach(doc => {
+            const item = doc.data();
+            if (item.categoria === 'permanente') {
+                if (item.quantidade <= 2) {
+                    itemsPermanentes.critico.push(doc);
+                } else if (item.quantidade <= 5) {
+                    itemsPermanentes.alerta.push(doc);
+                } else {
+                    itemsPermanentes.ok.push(doc);
+                }
+            } else {
+                itemsVariaveis.push(doc);
+            }
+        });
+        
+        // 3. Renderiza os itens na ordem desejada: Vermelho -> Amarelo -> Verde
+        itemsPermanentes.critico.forEach(renderizarItem);
+        itemsPermanentes.alerta.forEach(renderizarItem);
+        itemsPermanentes.ok.forEach(renderizarItem);
+
+        // 4. Renderiza os itens variáveis normalmente
+        itemsVariaveis.forEach(renderizarItem);
+
     }, error => {
         console.error("Erro ao buscar insumos: ", error);
     });
 }
+
 
 function formatarTimestamp(timestamp) {
     if (!timestamp) return 'Sem data';
@@ -118,7 +154,6 @@ function deletarItem(id) {
     }
 }
 
-
 function renderizarItem(doc) {
     const item = doc.data();
     const itemId = doc.id;
@@ -126,13 +161,13 @@ function renderizarItem(doc) {
     itemLi.className = 'item-insumo';
     itemLi.dataset.id = itemId;
 
-    // **LÓGICA ATUALIZADA** -> Aplicar classes de cor conforme as novas regras
+    // A lógica de aplicar as classes de cor continua a mesma aqui
     if (item.categoria === 'permanente') {
         if (item.quantidade <= 2) {
             itemLi.classList.add('nivel-critico'); // Vermelho
-        } else if (item.quantidade > 2 && item.quantidade <= 5) {
+        } else if (item.quantidade <= 5) {
             itemLi.classList.add('nivel-alerta'); // Amarelo
-        } else { // Se for maior que 5
+        } else {
             itemLi.classList.add('nivel-ok'); // Verde
         }
     }
@@ -169,6 +204,7 @@ function renderizarItem(doc) {
         deletarItem(itemId);
     });
 
+    // A lógica de para qual lista o item vai continua a mesma
     if (item.categoria === 'permanente') {
         listaPermanente.appendChild(itemLi);
     } else {
@@ -192,4 +228,3 @@ formAdicionar.addEventListener('submit', (e) => {
         }).catch(error => console.error("Erro ao adicionar insumo: ", error));
     }
 });
-
