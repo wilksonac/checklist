@@ -16,7 +16,6 @@ const firebaseConfig = {
 
 };
 
-
 // Passo 2: Inicialização do Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -127,13 +126,14 @@ function renderizarItem(doc) {
     itemLi.className = 'item-insumo';
     itemLi.dataset.id = itemId;
 
-    // **NOVO** -> Lógica para aplicar classes de alerta visual
-    // Verificamos primeiro a condição mais crítica (vermelho)
+    // **LÓGICA ATUALIZADA** -> Aplicar classes de cor conforme as novas regras
     if (item.categoria === 'permanente') {
-        if (item.quantidade < 2) { // 0 ou 1
-            itemLi.classList.add('nivel-critico');
-        } else if (item.quantidade < 3) { // 2
-            itemLi.classList.add('nivel-alerta');
+        if (item.quantidade <= 2) {
+            itemLi.classList.add('nivel-critico'); // Vermelho
+        } else if (item.quantidade > 2 && item.quantidade <= 5) {
+            itemLi.classList.add('nivel-alerta'); // Amarelo
+        } else { // Se for maior que 5
+            itemLi.classList.add('nivel-ok'); // Verde
         }
     }
 
@@ -192,3 +192,4 @@ formAdicionar.addEventListener('submit', (e) => {
         }).catch(error => console.error("Erro ao adicionar insumo: ", error));
     }
 });
+
