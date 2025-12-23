@@ -211,6 +211,48 @@ function renderizarItem(doc) {
         listaVariavel.appendChild(itemLi);
     }
 }
+// ... (Mantenha as configurações do Firebase e funções de renderizar/deletar anteriores) ...
+
+// FUNÇÃO PARA TROCAR ABAS
+function switchTab(tabId) {
+    // Remove 'active' de todos os conteúdos e botões
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+    // Adiciona 'active' na aba selecionada
+    document.getElementById(tabId).classList.add('active');
+    
+    // Ativa o botão correspondente
+    const buttons = document.querySelectorAll('.nav-item');
+    if(tabId === 'view-adicionar') buttons[0].classList.add('active');
+    if(tabId === 'view-permanente') buttons[1].classList.add('active');
+    if(tabId === 'view-variavel') buttons[2].classList.add('active');
+
+    // Rola para o topo ao trocar
+    window.scrollTo(0, 0);
+}
+
+// ATUALIZAÇÃO NA FUNÇÃO DE ADICIONAR ITEM
+formAdicionar.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nome = nomeItemInput.value;
+    const categoria = categoriaItemInput.value;
+    
+    if (nome && categoria) {
+        insumosCollection.add({
+            nome: nome,
+            categoria: categoria,
+            quantidade: 0,
+            ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            formAdicionar.reset();
+            // Após adicionar, leva o usuário direto para a lista que ele acabou de alimentar
+            switchTab(categoria === 'permanente' ? 'view-permanente' : 'view-variavel');
+        }).catch(error => console.error("Erro ao adicionar:", error));
+    }
+});
+
+// ... (Restante do código anterior de Snapshots e Login) ...
 
 formAdicionar.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -228,3 +270,4 @@ formAdicionar.addEventListener('submit', (e) => {
         }).catch(error => console.error("Erro ao adicionar insumo: ", error));
     }
 });
+
