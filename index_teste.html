@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Controle de Insumos da Fazenda</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=2">
+</head>
+<body>
+
+    <div id="tela-login">
+        <div class="login-container">
+            <h2>Login - Insumos</h2>
+            <form id="form-login">
+                <input type="email" id="login-email" placeholder="E-mail" required>
+                <input type="password" id="login-senha" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+                <p id="login-error" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="conteudo-principal" style="display: none;">
+        <header>
+            <h1>Fazenda Insumos</h1>
+            <div class="user-info">
+                <span id="user-email"></span>
+                <button id="btn-logout">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <section id="view-adicionar" class="tab-content">
+                <div class="form-container">
+                    <h2>Cadastrar Insumo</h2>
+                    <form id="form-adicionar-item">
+                        <input type="text" id="nome-item" placeholder="Nome do insumo" required>
+                        <select id="categoria-item" required>
+                            <option value="" disabled selected>Selecione a categoria</option>
+                            <option value="permanente">Permanente</option>
+                            <option value="variavel">Variável</option>
+                        </select>
+                        <button type="submit">Adicionar à Lista</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="view-permanente" class="tab-content active">
+                <div class="lista-card">
+                    <h2>LISTA PERMANENTE</h2>
+                    <ul id="lista-permanente" class="lista-insumos"></ul>
+                </div>
+            </section>
+
+            <section id="view-variavel" class="tab-content">
+                <div class="lista-card">
+                    <h2>LISTA VARIÁVEL</h2>
+                    <ul id="lista-variavel" class="lista-insumos"></ul>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" onclick="switchTab('view-adicionar')">
+                <span class="icon">➕</span>
+                <span class="label">Novo</span>
+            </button>
+            <button class="nav-item active" onclick="switchTab('view-permanente')">
+                <span class="icon">📋</span>
+                <span class="label">Permanente</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('view-variavel')">
+                <span class="icon">📦</span>
+                <span class="label">Variável</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
