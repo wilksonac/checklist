@@ -25,20 +25,26 @@ const insumosCollection = db.collection('insumos');
 const listaPermanente = document.getElementById('lista-permanente');
 const listaVariavel = document.getElementById('lista-variavel');
 
-// FUNÇÃO PARA TROCAR ABAS
+// OBJETO DE CONTROLE DE "CONGELAMENTO"
+// Armazena: { idDoItem: { status: 'critico/alerta/ok', expiraEm: timestamp } }
+let cooldowns = {};
+
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
     document.getElementById(tabId).classList.add('active');
-    
-    // Ativa o ícone correto na barra
     const index = tabId === 'view-permanente' ? 0 : tabId === 'view-variavel' ? 1 : 2;
     document.querySelectorAll('.nav-item')[index].classList.add('active');
     window.scrollTo(0,0);
 }
 
-// Escuta Autenticação
+// Helper para calcular o status baseado na quantidade
+function calcularStatus(quantidade) {
+    if (quantidade <= 2) return 'critico';
+    if (quantidade <= 5) return 'alerta';
+    return 'ok';
+}
+
 auth.onAuthStateChanged(user => {
     if (user) {
         document.getElementById('tela-login').style.display = 'none';
@@ -51,43 +57,70 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-// Listener do Banco de Dados (Com ordenação por Status)
+// Listener Principal
 function iniciarListener() {
     insumosCollection.orderBy('nome').onSnapshot(snapshot => {
-        listaPermanente.innerHTML = '';
-        listaVariavel.innerHTML = '';
-
-        const perm = { critico: [], alerta: [], ok: [] };
-        const vars = [];
-
-        snapshot.docs.forEach(doc => {
-            const data = doc.data();
-            if (data.categoria === 'permanente') {
-                if (data.quantidade <= 2) perm.critico.push(doc);
-                else if (data.quantidade <= 5) perm.alerta.push(doc);
-                else perm.ok.push(doc);
-            } else {
-                vars.push(doc);
-            }
-        });
-
-        // Renderiza na ordem de prioridade
-        perm.critico.forEach(d => renderItem(d, listaPermanente));
-        perm.alerta.forEach(d => renderItem(d, listaPermanente));
-        perm.ok.forEach(d => renderItem(d, listaPermanente));
-        vars.forEach(d => renderItem(d, listaVariavel));
+        renderizarTudo(snapshot);
     });
+}
+
+// Função de Renderização Separada para permitir chamadas automáticas
+function renderizarTudo(snapshot) {
+    listaPermanente.innerHTML = '';
+    listaVariavel.innerHTML = '';
+
+    const perm = { critico: [], alerta: [], ok: [] };
+    const vars = [];
+
+    const agora = Date.now();
+
+    snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        const id = doc.id;
+
+        if (data.categoria === 'permanente') {
+            let statusEfetivo;
+
+            // VERIFICA SE O ITEM ESTÁ CONGELADO (COOLDOWN)
+            if (cooldowns[id] && agora < cooldowns[id].expiraEm) {
+                statusEfetivo = cooldowns[id].status; // Usa o status de 1 min atrás
+            } else {
+                statusEfetivo = calcularStatus(data.quantidade); // Calcula o novo status real
+                delete cooldowns[id]; // Limpa se expirou
+            }
+
+            perm[statusEfetivo].push(doc);
+        } else {
+            vars.push(doc);
+        }
+    });
+
+    // Renderiza respeitando a ordem de status (congelado ou real)
+    perm.critico.forEach(d => renderItem(d, listaPermanente));
+    perm.alerta.forEach(d => renderItem(d, listaPermanente));
+    perm.ok.forEach(d => renderItem(d, listaPermanente));
+    vars.forEach(d => renderItem(d, listaVariavel));
 }
 
 function renderItem(doc, container) {
     const item = doc.data();
+    const id = doc.id;
     const li = document.createElement('li');
     li.className = 'item-insumo';
     
-    // Define classe de cor
+    // Determina a cor visual
+    let statusCor;
+    const agora = Date.now();
+    if (cooldowns[id] && agora < cooldowns[id].expiraEm) {
+        statusCor = cooldowns[id].status;
+        li.style.opacity = "0.8"; // Opcional: deixa o item levemente transparente enquanto "congelado"
+    } else {
+        statusCor = calcularStatus(item.quantidade);
+    }
+
     if (item.categoria === 'permanente') {
-        if (item.quantidade <= 2) li.classList.add('nivel-critico');
-        else if (item.quantidade <= 5) li.classList.add('nivel-alerta');
+        if (statusCor === 'critico') li.classList.add('nivel-critico');
+        else if (statusCor === 'alerta') li.classList.add('nivel-alerta');
         else li.classList.add('nivel-ok');
     }
 
@@ -99,28 +132,50 @@ function renderItem(doc, container) {
             <div class="log">📅 ${dataHora}</div>
         </div>
         <div class="item-controles">
-            <button onclick="updateQtde('${doc.id}', ${item.quantidade - 1})">-</button>
+            <button onclick="handleUpdate('${id}', ${item.quantidade}, -1)">-</button>
             <input type="number" value="${item.quantidade}" readonly>
-            <button onclick="updateQtde('${doc.id}', ${item.quantidade + 1})">+</button>
-            <button class="btn-deletar" onclick="deletar('${doc.id}')">🗑️</button>
+            <button onclick="handleUpdate('${id}', ${item.quantidade}, 1)">+</button>
+            <button class="btn-deletar" onclick="deletar('${id}')">🗑️</button>
         </div>
     `;
     container.appendChild(li);
 }
 
-window.updateQtde = (id, novaQtde) => {
+// FUNÇÃO PARA GERENCIAR O CLIQUE E O COOLDOWN
+window.handleUpdate = (id, qtdAtual, alteracao) => {
+    const novaQtde = qtdAtual + alteracao;
     if (novaQtde < 0) return;
+
+    // Se o item ainda não está em cooldown, salvamos o status ATUAL dele antes de mudar
+    if (!cooldowns[id]) {
+        cooldowns[id] = {
+            status: calcularStatus(qtdAtual), // Status de agora (antes do clique)
+            expiraEm: Date.now() + 60000     // Congela por 60 segundos
+        };
+    }
+
+    // Atualiza o Firebase (isso vai disparar o onSnapshot para todos)
     insumosCollection.doc(id).update({
         quantidade: novaQtde,
         ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp()
     });
 };
 
+// Timer para "destravar" itens automaticamente mesmo se ninguém mexer no banco
+setInterval(() => {
+    insumosCollection.orderBy('nome').get().then(snapshot => {
+        renderizarTudo(snapshot);
+    });
+}, 10000); // Verifica a cada 10 segundos se algum cooldown expirou para mover o item
+
 window.deletar = (id) => {
-    if (confirm("Excluir item?")) insumosCollection.doc(id).delete();
+    if (confirm("Excluir item?")) {
+        delete cooldowns[id];
+        insumosCollection.doc(id).delete();
+    }
 };
 
-// Login e Cadastro
+// Login
 document.getElementById('form-login').addEventListener('submit', e => {
     e.preventDefault();
     auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-senha').value)
