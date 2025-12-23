@@ -14,7 +14,7 @@ const insumosCollection = db.collection('insumos');
 
 let cooldowns = {};
 
-// TROCA DE ABAS (Índices ajustados para nova ordem: Perm, Var, [+], Painel)
+// TROCA DE ABAS (Perm, Var, [+], Painel)
 function switchTab(tabId) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
@@ -39,9 +39,8 @@ function switchTab(tabId) {
         navItems[1].classList.add('active');
     } 
     else if (tabId === 'view-adicionar') {
-        viewAdd.classList.add('active');
-        displayListas.style.display = 'none';
-        // O botão central não recebe classe 'active' visual de cor por ser fixo escuro
+        viewAdd.classList.add('active'); // MOSTRA O FORMULÁRIO
+        displayListas.style.display = 'none'; // ESCONDE AS LISTAS
     }
     else if (tabId === 'view-tudo') {
         viewAdd.classList.remove('active');
