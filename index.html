@@ -2,18 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Insumos da Fazenda</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Insumos Fazenda</title>
+    <link rel="stylesheet" href="style.css?v=7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 
     <div id="tela-login">
         <div class="login-container">
-            <h2>Login - Controle de Insumos</h2>
+            <h2>Fazenda Login</h2>
             <form id="form-login">
-                <input type="email" id="login-email" placeholder="E-mail" required>
+                <input type="email" id="login-email" placeholder="E-mail" required autocomplete="email">
                 <input type="password" id="login-senha" placeholder="Senha" required>
                 <button type="submit">Entrar</button>
                 <p id="login-error" class="error-message"></p>
@@ -22,47 +23,74 @@
     </div>
 
     <div id="conteudo-principal" style="display: none;">
-        <header>
-            <h1>Controle de Insumos da Fazenda</h1>
-            <div class="user-info">
+        <header class="header-minimal">
+            <div class="header-content">
                 <span id="user-email"></span>
                 <button id="btn-logout">Sair</button>
             </div>
         </header>
 
-        <main>
-            <div class="form-container">
-                <h2>Adicionar Novo Insumo</h2>
-                <form id="form-adicionar-item">
-                    <input type="text" id="nome-item" placeholder="Nome do insumo" required>
-                    <select id="categoria-item" required>
-                        <option value="" disabled selected>Selecione a categoria</option>
-                        <option value="permanente">Permanente</option>
-                        <option value="variavel">Variável</option>
-                    </select>
-                    <button type="submit">Adicionar</button>
-                </form>
-            </div>
+        <main id="main-container">
+            <section id="view-adicionar" class="tab-content">
+                <div class="form-container">
+                    <h2 class="titulo-lista">CADASTRAR NOVO INSUMO</h2>
+                    <form id="form-adicionar-item">
+                        <input type="text" id="nome-item" placeholder="Nome do insumo" required>
+                        <select id="categoria-item" required>
+                            <option value="" disabled selected>Selecione a categoria</option>
+                            <option value="permanente">Permanente</option>
+                            <option value="variavel">Variável</option>
+                        </select>
+                        <button type="submit">Cadastrar Item</button>
+                    </form>
+                </div>
+            </section>
 
-            <div class="listas-container">
-                <div class="lista-card">
-                    <h2>LISTA PERMANENTE</h2>
-                    <ul id="lista-permanente" class="lista-insumos"></ul>
-                </div>
-                <div class="lista-card">
-                    <h2>LISTA VARIÁVEL</h2>
-                    <ul id="lista-variavel" class="lista-insumos"></ul>
-                </div>
+            <div id="display-listas">
+                <section id="secao-permanente" class="lista-wrapper">
+                    <div class="lista-card">
+                        <h2 class="titulo-lista">LISTA PERMANENTE</h2>
+                        <ul id="lista-permanente" class="lista-insumos"></ul>
+                    </div>
+                </section>
+
+                <section id="secao-variavel" class="lista-wrapper">
+                    <div class="lista-card">
+                        <h2 class="titulo-lista">LISTA VARIÁVEL</h2>
+                        <ul id="lista-variavel" class="lista-insumos"></ul>
+                    </div>
+                </section>
             </div>
         </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" onclick="switchTab('view-permanente')">
+                <span class="icon">📋</span>
+                <span class="label">Perm.</span>
+            </button>
+
+            <button class="nav-item" onclick="switchTab('view-variavel')">
+                <span class="icon">📦</span>
+                <span class="label">Var.</span>
+            </button>
+
+            <div class="nav-center-wrapper">
+                <button class="nav-item-center" onclick="switchTab('view-adicionar')">
+                    <span class="icon-plus">+</span>
+                </button>
+            </div>
+
+            <button class="nav-item active" onclick="switchTab('view-tudo')">
+                <span class="icon">📊</span>
+                <span class="label">Painel</span>
+            </button>
+        </nav>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script> <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
-    <script src="app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="app.js?v=7"></script>
 
 </body>
-
 </html>
-
