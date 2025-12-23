@@ -7,26 +7,22 @@ const firebaseConfig = {
     appId: "1:458933835087:web:f7762203b30550cfcfa13a"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const db = firebase.firestore();
 const auth = firebase.auth();
 const insumosCollection = db.collection('insumos');
 
 let cooldowns = {};
 
-// TROCA DE ABAS OTIMIZADA (SEM MOVER DOM)
 function switchTab(tabId) {
-    // 1. Resetar botões da nav
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
-    // 2. Elementos das seções
     const viewAdd = document.getElementById('view-adicionar');
     const displayListas = document.getElementById('display-listas');
     const secPerm = document.getElementById('secao-permanente');
     const secVar = document.getElementById('secao-variavel');
     const navItems = document.querySelectorAll('.nav-item');
 
-    // 3. Lógica de visibilidade instantânea
     if (tabId === 'view-tudo') {
         viewAdd.classList.remove('active');
         displayListas.style.display = 'block';
@@ -52,7 +48,6 @@ function switchTab(tabId) {
         viewAdd.classList.add('active');
         displayListas.style.display = 'none';
     }
-
     window.scrollTo(0,0);
 }
 
@@ -78,8 +73,9 @@ function iniciarListener() {
     insumosCollection.orderBy('nome').onSnapshot(snapshot => {
         const lp = document.getElementById('lista-permanente');
         const lv = document.getElementById('lista-variavel');
+        if (!lp || !lv) return;
+        
         lp.innerHTML = ''; lv.innerHTML = '';
-
         const perm = { critico: [], alerta: [], ok: [] };
         const vars = [];
         const agora = Date.now();
@@ -151,6 +147,6 @@ document.getElementById('form-adicionar-item').addEventListener('submit', e => {
     insumosCollection.add({ nome: n, categoria: c, quantidade: 0, ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp() })
         .then(() => { 
             document.getElementById('form-adicionar-item').reset(); 
-            switchTab('view-tudo'); // Volta para o painel após cadastrar
+            switchTab('view-tudo'); 
         });
 });
