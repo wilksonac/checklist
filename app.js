@@ -14,6 +14,7 @@ const insumosCollection = db.collection('insumos');
 
 let cooldowns = {};
 
+// TROCA DE ABAS (Índices ajustados para nova ordem: Perm, Var, [+], Painel)
 function switchTab(tabId) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
@@ -23,30 +24,31 @@ function switchTab(tabId) {
     const secVar = document.getElementById('secao-variavel');
     const navItems = document.querySelectorAll('.nav-item');
 
-    if (tabId === 'view-tudo') {
-        viewAdd.classList.remove('active');
-        displayListas.style.display = 'block';
-        secPerm.style.display = 'block';
-        secVar.style.display = 'block';
-        navItems[0].classList.add('active');
-    } 
-    else if (tabId === 'view-permanente') {
+    if (tabId === 'view-permanente') {
         viewAdd.classList.remove('active');
         displayListas.style.display = 'block';
         secPerm.style.display = 'block';
         secVar.style.display = 'none';
-        navItems[1].classList.add('active');
+        navItems[0].classList.add('active');
     } 
     else if (tabId === 'view-variavel') {
         viewAdd.classList.remove('active');
         displayListas.style.display = 'block';
         secPerm.style.display = 'none';
         secVar.style.display = 'block';
-        navItems[2].classList.add('active');
+        navItems[1].classList.add('active');
     } 
     else if (tabId === 'view-adicionar') {
         viewAdd.classList.add('active');
         displayListas.style.display = 'none';
+        // O botão central não recebe classe 'active' visual de cor por ser fixo escuro
+    }
+    else if (tabId === 'view-tudo') {
+        viewAdd.classList.remove('active');
+        displayListas.style.display = 'block';
+        secPerm.style.display = 'block';
+        secVar.style.display = 'block';
+        navItems[2].classList.add('active');
     }
     window.scrollTo(0,0);
 }
