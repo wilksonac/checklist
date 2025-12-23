@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Insumos Fazenda</title>
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
@@ -23,9 +23,8 @@
     </div>
 
     <div id="conteudo-principal" style="display: none;">
-        <header>
-            <h1>Controle de Insumos</h1>
-            <div class="user-info">
+        <header class="header-minimal">
+            <div class="header-content">
                 <span id="user-email"></span>
                 <button id="btn-logout">Sair</button>
             </div>
@@ -65,14 +64,14 @@
         </main>
 
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('view-tudo')">
-                <span class="icon">📊</span>
-                <span class="label">Painel</span>
-            </button>
-            
             <button class="nav-item" onclick="switchTab('view-permanente')">
                 <span class="icon">📋</span>
                 <span class="label">Perm.</span>
+            </button>
+
+            <button class="nav-item" onclick="switchTab('view-variavel')">
+                <span class="icon">📦</span>
+                <span class="label">Var.</span>
             </button>
 
             <div class="nav-center-wrapper">
@@ -81,9 +80,9 @@
                 </button>
             </div>
 
-            <button class="nav-item" onclick="switchTab('view-variavel')">
-                <span class="icon">📦</span>
-                <span class="label">Var.</span>
+            <button class="nav-item active" onclick="switchTab('view-tudo')">
+                <span class="icon">📊</span>
+                <span class="label">Painel</span>
             </button>
         </nav>
     </div>
@@ -91,7 +90,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=6"></script>
 
 </body>
 </html>
