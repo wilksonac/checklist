@@ -4,67 +4,79 @@ body {
     font-family: -apple-system, system-ui, sans-serif;
     background-color: #f0f2f5;
     margin: 0;
-    padding-bottom: 90px;
+    padding-bottom: 100px;
+}
+
+/* CENTRALIZAÇÃO DO CONTEÚDO */
+#main-container {
+    max-width: 600px; /* Largura ideal para leitura e toque */
+    margin: 0 auto;
+    padding: 15px;
 }
 
 /* TELA LOGIN */
 #tela-login {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: #2c5e2e;
-    display: flex; align-items: center; justify-content: center;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #2c5e2e; display: flex; align-items: center; justify-content: center;
     z-index: 9999; padding: 20px;
 }
 .login-container {
     background: white; padding: 30px; border-radius: 20px;
     width: 100%; max-width: 380px; text-align: center;
 }
-#form-login input, #form-login button {
-    width: 100%; height: 50px; margin-bottom: 15px;
-    border-radius: 10px; border: 1px solid #ddd; font-size: 16px;
-}
-#form-login button { background: #4CAF50; color: white; border: none; font-weight: bold; }
 
 /* HEADER */
 header {
     background: #2c5e2e; color: white; padding: 15px;
     text-align: center; position: sticky; top: 0; z-index: 1000;
 }
-header h1 { margin: 0; font-size: 1.1rem; }
-.user-info { font-size: 0.7rem; margin-top: 5px; opacity: 0.8; }
-#btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.6rem; }
 
-/* ABAS */
-.tab-content { display: none; padding: 15px; }
-.tab-content.active { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* CONTROLE DE VISIBILIDADE */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.lista-wrapper { display: block; margin-bottom: 20px; }
 
-/* CARDS E STATUS */
-.item-insumo {
-    background: white; border-radius: 12px; padding: 15px;
-    margin-bottom: 12px; display: flex; flex-direction: column;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 8px solid #ddd;
+/* CARDS */
+.lista-card {
+    background: transparent;
 }
-.nivel-critico { border-left-color: #f44336; background: #fff1f0; } /* <= 2 */
-.nivel-alerta { border-left-color: #ffc107; background: #fffbe6; }  /* 3 a 5 */
-.nivel-ok { border-left-color: #4CAF50; background: #f0fff4; }      /* > 5 */
+.lista-card h2 {
+    font-size: 0.85rem; color: #666; margin: 10px 5px; font-weight: bold;
+}
 
-.item-info .nome { font-weight: bold; font-size: 1rem; }
-.item-info .log { font-size: 0.7rem; color: #888; margin-top: 4px; }
+.item-insumo {
+    background: white; border-radius: 15px; padding: 18px;
+    margin-bottom: 15px; display: flex; flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 10px solid #ddd;
+    width: 100%; /* Garante que ocupe o centro */
+}
 
+/* STATUS CORES */
+.nivel-critico { border-left-color: #f44336; background: #fff1f0; }
+.nivel-alerta { border-left-color: #ffc107; background: #fffbe6; }
+.nivel-ok { border-left-color: #4CAF50; background: #f0fff4; }
+
+.item-info .nome { font-weight: bold; font-size: 1.1rem; }
+.item-info .log { font-size: 0.75rem; color: #999; margin-top: 5px; }
+
+/* BOTÕES DE CONTROLE */
 .item-controles {
     display: flex; align-items: center; justify-content: space-between;
-    background: #f8f9fa; padding: 8px; border-radius: 8px; margin-top: 10px;
+    background: #f8f9fa; padding: 10px; border-radius: 12px; margin-top: 10px;
 }
-.item-controles button { width: 45px; height: 45px; border-radius: 8px; border: none; background: white; font-size: 1.3rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-.item-controles input { width: 50px; border: none; background: transparent; text-align: center; font-size: 1.1rem; font-weight: bold; }
+.item-controles button { 
+    width: 50px; height: 50px; border-radius: 10px; border: none; 
+    background: white; font-size: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    color: #2c5e2e;
+}
+.item-controles input { width: 60px; border: none; background: transparent; text-align: center; font-size: 1.3rem; font-weight: bold; }
 
-/* TAB BAR ESTILO IMAGEM */
+/* TAB BAR (3 ITENS + BOTÃO CENTRAL) */
 .bottom-nav {
-    position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
     background: #ffffff; display: flex; justify-content: space-around;
-    align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-    z-index: 2000; padding: 0 10px 15px 10px;
+    align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
+    z-index: 2000; padding: 0 5px 20px 5px;
 }
 .nav-item {
     flex: 1; border: none; background: none;
@@ -72,22 +84,22 @@ header h1 { margin: 0; font-size: 1.1rem; }
     color: #9da3b4; transition: 0.2s;
 }
 .nav-item.active { color: #1a1c29; font-weight: bold; }
-.nav-item .icon { font-size: 1.3rem; margin-bottom: 2px; }
-.nav-item .label { font-size: 0.65rem; }
+.nav-item .icon { font-size: 1.4rem; }
+.nav-item .label { font-size: 0.7rem; }
 
-.nav-center-wrapper { position: relative; width: 70px; }
+.nav-center-wrapper { position: relative; width: 60px; height: 100%; }
 .nav-item-center {
-    position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 60px; background: #1a1c29;
-    border-radius: 50%; border: 5px solid #ffffff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+    width: 65px; height: 65px; background: #1a1c29;
+    border-radius: 50%; border: 6px solid #f0f2f5; /* Cor do fundo para "recortar" */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     display: flex; align-items: center; justify-content: center;
 }
-.nav-item-center .icon-plus { color: white; font-size: 2rem; }
+.nav-item-center .icon-plus { color: white; font-size: 2.2rem; }
 
-/* FORM */
-.form-container { background: white; padding: 20px; border-radius: 15px; }
+/* FORMULÁRIO */
+.form-container { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 #form-adicionar-item input, #form-adicionar-item select, #form-adicionar-item button {
-    width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px;
+    width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 16px;
 }
-#form-adicionar-item button { background: #2c5e2e; color: white; border: none; font-weight: bold; }
+#form-adicionar-item button { background: #2c5e2e; color: white; border: none; font-weight: bold; margin-top: 10px; }
