@@ -1,44 +1,142 @@
-function switchTab(tabId) {
-    // 1. Gerencia visibilidade das seções
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
+const firebaseConfig = {
+    apiKey: "AIzaSyCvF8SoA2YQrrNOmRFI_IOEiXpRu0ZYu6w",
+    authDomain: "controle-insumos-fazenda.firebaseapp.com",
+    projectId: "controle-insumos-fazenda",
+    storageBucket: "controle-insumos-fazenda.firebasestorage.app",
+    messagingSenderId: "458933835087",
+    appId: "1:458933835087:web:f7762203b30550cfcfa13a"
+};
 
-    // 2. Gerencia estado ativo dos botões (cor cinza vs escuro)
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+const insumosCollection = db.collection('insumos');
+
+let cooldowns = {};
+
+// TROCA DE ABAS COM LÓGICA DE MOVIMENTAÇÃO DE LISTAS
+function switchTab(tabId) {
+    if(tabId === 'view-sair') { auth.signOut(); return; }
+
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    // Mapeamento de qual botão destacar
+
+    const target = document.getElementById(tabId);
+    if(target) target.classList.add('active');
+
     const navItems = document.querySelectorAll('.nav-item');
     if (tabId === 'view-tudo') navItems[0].classList.add('active');
     if (tabId === 'view-permanente') navItems[1].classList.add('active');
     if (tabId === 'view-variavel') navItems[2].classList.add('active');
 
-    // 3. Lógica Especial para "Visualizar Tudo"
     const containerTudo = document.getElementById('container-tudo');
     const lp = document.getElementById('lista-permanente');
     const lv = document.getElementById('lista-variavel');
 
+    // Move as listas fisicamente no HTML dependendo da aba
     if (tabId === 'view-tudo') {
-        // Move as listas para dentro da aba Tudo
-        containerTudo.appendChild(lp.parentElement);
-        containerTudo.appendChild(lv.parentElement);
+        containerTudo.appendChild(lp.closest('.lista-card') || lp);
+        containerTudo.appendChild(lv.closest('.lista-card') || lv);
     } else if (tabId === 'view-permanente') {
-        // Devolve a lista para sua aba original
         document.querySelector('#view-permanente .lista-card').appendChild(lp);
     } else if (tabId === 'view-variavel') {
-        // Devolve a lista para sua aba original
         document.querySelector('#view-variavel .lista-card').appendChild(lv);
     }
-
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
-// ATUALIZAÇÃO NO LISTENER PARA SUPORTAR A ABA "TUDO"
+function calcularStatus(q) {
+    if (q <= 2) return 'critico';
+    if (q <= 5) return 'alerta';
+    return 'ok';
+}
+
+auth.onAuthStateChanged(user => {
+    if (user) {
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('conteudo-principal').style.display = 'block';
+        document.getElementById('user-email').textContent = user.email;
+        iniciarListener();
+    } else {
+        document.getElementById('tela-login').style.display = 'flex';
+        document.getElementById('conteudo-principal').style.display = 'none';
+    }
+});
+
 function iniciarListener() {
     insumosCollection.orderBy('nome').onSnapshot(snapshot => {
-        // Limpa apenas o conteúdo das listas, não os elementos pai
-        document.getElementById('lista-permanente').innerHTML = '';
-        document.getElementById('lista-variavel').innerHTML = '';
-        
-        renderizarTudo(snapshot);
+        const lp = document.getElementById('lista-permanente');
+        const lv = document.getElementById('lista-variavel');
+        lp.innerHTML = ''; lv.innerHTML = '';
+
+        const perm = { critico: [], alerta: [], ok: [] };
+        const vars = [];
+        const agora = Date.now();
+
+        snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            if (data.categoria === 'permanente') {
+                let status = (cooldowns[doc.id] && agora < cooldowns[doc.id].expiraEm) 
+                    ? cooldowns[doc.id].status : calcularStatus(data.quantidade);
+                perm[status].push(doc);
+            } else { vars.push(doc); }
+        });
+
+        perm.critico.forEach(d => renderItem(d, lp));
+        perm.alerta.forEach(d => renderItem(d, lp));
+        perm.ok.forEach(d => renderItem(d, lp));
+        vars.forEach(d => renderItem(d, lv));
     });
 }
+
+function renderItem(doc, container) {
+    const item = doc.data();
+    const li = document.createElement('li');
+    li.className = 'item-insumo';
+    
+    let status = (cooldowns[doc.id] && Date.now() < cooldowns[doc.id].expiraEm) 
+                 ? cooldowns[doc.id].status : calcularStatus(item.quantidade);
+
+    if (item.categoria === 'permanente') li.classList.add(`nivel-${status}`);
+
+    const dataHora = item.ultimaAlteracao ? item.ultimaAlteracao.toDate().toLocaleString('pt-BR') : '...';
+
+    li.innerHTML = `
+        <div class="item-info">
+            <div class="nome">${item.nome}</div>
+            <div class="log">📅 ${dataHora}</div>
+        </div>
+        <div class="item-controles">
+            <button onclick="handleUpdate('${doc.id}', ${item.quantidade}, -1)">-</button>
+            <input type="number" value="${item.quantidade}" readonly>
+            <button onclick="handleUpdate('${doc.id}', ${item.quantidade}, 1)">+</button>
+            <button class="btn-deletar" onclick="deletar('${doc.id}')">🗑️</button>
+        </div>
+    `;
+    container.appendChild(li);
+}
+
+window.handleUpdate = (id, qtd, alt) => {
+    const nova = qtd + alt;
+    if (nova < 0) return;
+    if (!cooldowns[id]) cooldowns[id] = { status: calcularStatus(qtd), expiraEm: Date.now() + 60000 };
+    insumosCollection.doc(id).update({ quantidade: nova, ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp() });
+};
+
+window.deletar = (id) => { if (confirm("Excluir?")) insumosCollection.doc(id).delete(); };
+
+document.getElementById('form-login').addEventListener('submit', e => {
+    e.preventDefault();
+    auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-senha').value)
+        .catch(err => alert("Erro: " + err.message));
+});
+
+document.getElementById('btn-logout').addEventListener('click', () => auth.signOut());
+
+document.getElementById('form-adicionar-item').addEventListener('submit', e => {
+    e.preventDefault();
+    const n = document.getElementById('nome-item').value;
+    const c = document.getElementById('categoria-item').value;
+    insumosCollection.add({ nome: n, categoria: c, quantidade: 0, ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp() })
+        .then(() => { document.getElementById('form-adicionar-item').reset(); switchTab(c === 'permanente' ? 'view-permanente' : 'view-variavel'); });
+});
