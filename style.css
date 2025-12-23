@@ -1,122 +1,118 @@
 * { 
     box-sizing: border-box; 
     -webkit-tap-highlight-color: transparent; 
-    touch-action: manipulation; /* Evita o zoom de 3 cliques e atrasos no toque */
+    touch-action: manipulation; 
 }
 
 body {
     font-family: -apple-system, system-ui, sans-serif;
     background-color: #f0f2f5;
     margin: 0;
-    padding-bottom: 90px;
+    padding-bottom: 100px;
+}
+
+/* TELA LOGIN OTIMIZADA CELULAR */
+#tela-login {
+    position: fixed;
+    top: 0; left: 0; width: 100%; 
+    height: 100dvh; /* Altura dinâmica para celular */
+    background: #2c5e2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.login-container {
+    background: white;
+    padding: 30px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.login-container h2 { color: #2c5e2e; margin-bottom: 25px; }
+
+#form-login input {
+    width: 100%; height: 55px; margin-bottom: 15px;
+    border-radius: 12px; border: 1px solid #ddd;
+    font-size: 16px; padding: 10px; outline: none;
+}
+
+#form-login button {
+    width: 100%; height: 55px; background: #2c5e2e;
+    color: white; border: none; border-radius: 12px;
+    font-size: 18px; font-weight: bold;
 }
 
 /* HEADER MÍNIMO */
 .header-minimal {
-    background-color: #2c5e2e;
-    color: white;
-    padding: 8px 15px; /* Altura mínima */
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    background: #2c5e2e; color: white; padding: 10px 15px;
+    position: sticky; top: 0; z-index: 1000;
 }
 
 .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 500px;
-    margin: 0 auto;
-    font-size: 0.8rem;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 500px; margin: 0 auto; font-size: 0.8rem;
 }
 
 #btn-logout {
-    background: white;
-    color: #2c5e2e;
-    border: none;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    font-weight: bold;
+    background: white; color: #2c5e2e; border: none;
+    padding: 4px 12px; border-radius: 15px; font-size: 0.7rem; font-weight: bold;
 }
 
-/* ÁREA ÚTIL CENTRALIZADA */
-#main-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 10px;
-}
+/* CENTRALIZAÇÃO LISTA */
+#main-container { max-width: 500px; margin: 0 auto; padding: 10px; }
+
+.tab-content { display: none; width: 100%; }
+.tab-content.active { display: block; }
 
 .lista-insumos {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centraliza os itens na tela */
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; align-items: center;
 }
+
+.titulo-lista { font-size: 0.8rem; color: #666; margin: 15px 5px; font-weight: bold; width: 100%; }
 
 .item-insumo {
-    background: white;
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    border-left: 10px solid #ddd;
-    width: 100%; /* Ocupa a largura do container */
+    background: white; border-radius: 18px; padding: 18px;
+    margin-bottom: 15px; display: flex; flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-left: 10px solid #ddd;
+    width: 100%;
 }
 
-/* STATUS */
+/* CORES STATUS */
 .nivel-critico { border-left-color: #f44336; background: #fff1f0; }
 .nivel-alerta { border-left-color: #ffc107; background: #fffbe6; }
 .nivel-ok { border-left-color: #4CAF50; background: #f0fff4; }
 
-.item-info .nome { font-weight: bold; font-size: 1.1rem; color: #1a1c29; }
-.item-info .log { font-size: 0.7rem; color: #888; }
+.item-info .nome { font-weight: bold; font-size: 1.15rem; color: #1a1c29; }
+.item-info .log { font-size: 0.7rem; color: #888; margin-top: 3px; }
 
-/* CONTROLES TOUCH */
+/* CONTROLES */
 .item-controles {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #f8f9fa;
-    padding: 8px;
-    border-radius: 12px;
-    margin-top: 10px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: #f8f9fa; padding: 10px; border-radius: 14px; margin-top: 15px;
 }
-
 .item-controles button { 
-    width: 50px; 
-    height: 50px; 
-    border-radius: 10px; 
-    border: none; 
-    background: white; 
-    font-size: 1.5rem; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    width: 52px; height: 52px; border-radius: 12px; border: none; 
+    background: white; font-size: 1.6rem; box-shadow: 0 3px 6px rgba(0,0,0,0.1); 
     color: #2c5e2e;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
+.item-controles input { width: 60px; border: none; background: transparent; text-align: center; font-size: 1.4rem; font-weight: bold; }
 
-.item-controles input { 
-    font-size: 1.3rem !important; /* Importante para evitar zoom no iOS */
-    width: 60px; 
-    border: none; 
-    background: transparent; 
-    text-align: center; 
-    font-weight: bold; 
-}
-
-/* TAB BAR REORDENADA */
+/* BARRA INFERIOR TRANSLÚCIDA (70%) */
 .bottom-nav {
-    position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
-    background: #ffffff; display: flex; justify-content: space-around;
-    align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-    z-index: 2000; padding: 0 10px 10px 10px;
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
+    background: rgba(255, 255, 255, 0.7); /* 70% opacidade */
+    backdrop-filter: blur(10px); /* Efeito vidro */
+    -webkit-backdrop-filter: blur(10px);
+    display: flex; justify-content: space-around;
+    align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    z-index: 2000; padding: 0 10px 20px 10px;
 }
 
 .nav-item {
@@ -130,27 +126,16 @@ body {
 .nav-center-wrapper { position: relative; width: 60px; height: 100%; }
 .nav-item-center {
     position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-    width: 62px; height: 62px; background: #1a1c29;
-    border-radius: 50%; border: 5px solid #f0f2f5;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 64px; height: 64px; background: #1a1c29;
+    border-radius: 50%; border: 5px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     display: flex; align-items: center; justify-content: center;
 }
-.nav-item-center .icon-plus { color: white; font-size: 2rem; }
+.nav-item-center .icon-plus { color: white; font-size: 2.2rem; }
 
-/* FORM */
-.form-container { background: white; padding: 20px; border-radius: 20px; width: 100%; }
+/* FORMULÁRIO */
+.form-container { background: white; padding: 25px; border-radius: 20px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 #form-adicionar-item input, #form-adicionar-item select, #form-adicionar-item button {
-    width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 16px;
+    width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 16px;
 }
 #form-adicionar-item button { background: #2c5e2e; color: white; border: none; font-weight: bold; }
-
-/* LOGIN */
-#tela-login {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #2c5e2e; display: flex; align-items: center; justify-content: center;
-    z-index: 9999; padding: 20px;
-}
-.login-container {
-    background: white; padding: 30px; border-radius: 20px;
-    width: 100%; max-width: 350px; text-align: center;
-}
