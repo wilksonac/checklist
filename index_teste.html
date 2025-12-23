@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Insumos Fazenda</title>
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
@@ -14,7 +14,7 @@
         <div class="login-container">
             <h2>Fazenda Login</h2>
             <form id="form-login">
-                <input type="email" id="login-email" placeholder="E-mail" required>
+                <input type="email" id="login-email" placeholder="E-mail" required autocomplete="email">
                 <input type="password" id="login-senha" placeholder="Senha" required>
                 <button type="submit">Entrar</button>
                 <p id="login-error" class="error-message"></p>
@@ -33,7 +33,7 @@
         <main id="main-container">
             <section id="view-adicionar" class="tab-content">
                 <div class="form-container">
-                    <h2>Novo Insumo</h2>
+                    <h2 class="titulo-lista">CADASTRAR NOVO INSUMO</h2>
                     <form id="form-adicionar-item">
                         <input type="text" id="nome-item" placeholder="Nome do insumo" required>
                         <select id="categoria-item" required>
@@ -90,7 +90,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
 
 </body>
 </html>
