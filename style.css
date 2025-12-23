@@ -9,9 +9,24 @@ body {
 
 /* CENTRALIZAÇÃO DO CONTEÚDO */
 #main-container {
-    max-width: 600px; /* Largura ideal para leitura e toque */
+    max-width: 500px; /* Estreitado para melhor visualização centralizada */
     margin: 0 auto;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza as seções */
+}
+
+#display-listas, .tab-content, .lista-wrapper {
+    width: 100%;
+}
+
+/* RESET DE LISTA - CORREÇÃO PARA O ALINHAMENTO À DIREITA */
+.lista-insumos {
+    list-style: none;
+    padding: 0; /* Remove o recuo padrão que causava o desalinhamento */
+    margin: 0;
+    width: 100%;
 }
 
 /* TELA LOGIN */
@@ -22,7 +37,7 @@ body {
 }
 .login-container {
     background: white; padding: 30px; border-radius: 20px;
-    width: 100%; max-width: 380px; text-align: center;
+    width: 100%; max-width: 350px; text-align: center;
 }
 
 /* HEADER */
@@ -31,24 +46,21 @@ header {
     text-align: center; position: sticky; top: 0; z-index: 1000;
 }
 
-/* CONTROLE DE VISIBILIDADE */
+/* ABAS */
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-.lista-wrapper { display: block; margin-bottom: 20px; }
 
-/* CARDS */
-.lista-card {
-    background: transparent;
-}
-.lista-card h2 {
-    font-size: 0.85rem; color: #666; margin: 10px 5px; font-weight: bold;
+.titulo-lista {
+    font-size: 0.8rem; color: #666; margin: 15px 5px 10px 5px; font-weight: bold;
+    text-align: left; /* Título levemente à esquerda como na imagem */
 }
 
+/* CARTÃO DE INSUMO */
 .item-insumo {
-    background: white; border-radius: 15px; padding: 18px;
+    background: white; border-radius: 15px; padding: 20px;
     margin-bottom: 15px; display: flex; flex-direction: column;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 10px solid #ddd;
-    width: 100%; /* Garante que ocupe o centro */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 10px solid #ddd;
+    width: 100%;
 }
 
 /* STATUS CORES */
@@ -56,27 +68,27 @@ header {
 .nivel-alerta { border-left-color: #ffc107; background: #fffbe6; }
 .nivel-ok { border-left-color: #4CAF50; background: #f0fff4; }
 
-.item-info .nome { font-weight: bold; font-size: 1.1rem; }
-.item-info .log { font-size: 0.75rem; color: #999; margin-top: 5px; }
+.item-info .nome { font-weight: bold; font-size: 1.2rem; color: #1a1c29; }
+.item-info .log { font-size: 0.75rem; color: #888; margin-top: 4px; }
 
-/* BOTÕES DE CONTROLE */
+/* CONTROLES */
 .item-controles {
     display: flex; align-items: center; justify-content: space-between;
-    background: #f8f9fa; padding: 10px; border-radius: 12px; margin-top: 10px;
+    background: #f8f9fa; padding: 10px; border-radius: 12px; margin-top: 15px;
 }
 .item-controles button { 
-    width: 50px; height: 50px; border-radius: 10px; border: none; 
-    background: white; font-size: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-    color: #2c5e2e;
+    width: 48px; height: 48px; border-radius: 10px; border: none; 
+    background: white; font-size: 1.4rem; box-shadow: 0 2px 4px rgba(0,0,0,0.08); 
+    color: #2c5e2e; display: flex; align-items: center; justify-content: center;
 }
-.item-controles input { width: 60px; border: none; background: transparent; text-align: center; font-size: 1.3rem; font-weight: bold; }
+.item-controles input { width: 50px; border: none; background: transparent; text-align: center; font-size: 1.3rem; font-weight: bold; }
 
-/* TAB BAR (3 ITENS + BOTÃO CENTRAL) */
+/* TAB BAR */
 .bottom-nav {
-    position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
     background: #ffffff; display: flex; justify-content: space-around;
-    align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
-    z-index: 2000; padding: 0 5px 20px 5px;
+    align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    z-index: 2000; padding: 0 10px 10px 10px;
 }
 .nav-item {
     flex: 1; border: none; background: none;
@@ -84,22 +96,22 @@ header {
     color: #9da3b4; transition: 0.2s;
 }
 .nav-item.active { color: #1a1c29; font-weight: bold; }
-.nav-item .icon { font-size: 1.4rem; }
-.nav-item .label { font-size: 0.7rem; }
+.nav-item .icon { font-size: 1.3rem; }
+.nav-item .label { font-size: 0.65rem; }
 
 .nav-center-wrapper { position: relative; width: 60px; height: 100%; }
 .nav-item-center {
     position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-    width: 65px; height: 65px; background: #1a1c29;
-    border-radius: 50%; border: 6px solid #f0f2f5; /* Cor do fundo para "recortar" */
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    width: 62px; height: 62px; background: #1a1c29;
+    border-radius: 50%; border: 5px solid #f0f2f5;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     display: flex; align-items: center; justify-content: center;
 }
-.nav-item-center .icon-plus { color: white; font-size: 2.2rem; }
+.nav-item-center .icon-plus { color: white; font-size: 2rem; }
 
-/* FORMULÁRIO */
-.form-container { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+/* FORM */
+.form-container { background: white; padding: 25px; border-radius: 20px; width: 100%; }
 #form-adicionar-item input, #form-adicionar-item select, #form-adicionar-item button {
-    width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 16px;
+    width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 16px;
 }
-#form-adicionar-item button { background: #2c5e2e; color: white; border: none; font-weight: bold; margin-top: 10px; }
+#form-adicionar-item button { background: #2c5e2e; color: white; border: none; font-weight: bold; }
