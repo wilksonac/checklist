@@ -1,252 +1,21 @@
-/* ========================================= */
-/* CONFIGURAÇÕES GERAIS E MOBILE-FIRST       */
-/* ========================================= */
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Remove o brilho azul ao tocar no iPhone */
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 80px; /* Espaço para a barra de navegação inferior */
-    color: #333;
-    /* Impede zoom indesejado em alguns navegadores */
-    touch-action: manipulation;
-}
-
-/* ========================================= */
-/* TELA DE LOGIN (CORREÇÃO PARA CELULAR)     */
-/* ========================================= */
-#tela-login {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #2c5e2e; /* Verde Fazenda */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    padding: 20px;
-}
-
-.login-container {
-    background: white;
-    padding: 30px 25px;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 380px; /* Limite para não ficar gigante no PC */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    text-align: center;
-}
-
-.login-container h2 {
-    margin-top: 0;
-    margin-bottom: 25px;
-    color: #2c5e2e;
-    font-size: 1.5rem;
-}
-
-#form-login input {
-    width: 100%;
-    height: 55px; /* Altura ideal para o polegar */
-    margin-bottom: 15px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 16px; /* Mínimo 16px para evitar zoom automático no iPhone */
-    outline: none;
-}
-
-#form-login button {
-    width: 100%;
-    height: 55px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-#form-login button:active {
-    background-color: #3e8e41;
-    transform: scale(0.98);
-}
-
-.error-message {
-    color: #d9534f;
-    font-size: 0.9rem;
-    margin-top: 15px;
-    min-height: 1.2em;
-}
-
-/* ========================================= */
-/* CABEÇALHO (HEADER)                        */
-/* ========================================= */
-header {
-    background-color: #2c5e2e;
-    color: white;
-    padding: 15px 20px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 1.2rem;
-    letter-spacing: 1px;
-}
-
-.user-info {
-    font-size: 0.75rem;
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.9;
-}
-
-#btn-logout {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 5px;
-    margin-left: 10px;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-}
-
-/* ========================================= */
-/* NAVEGAÇÃO POR ABAS (TAB CONTENT)          */
-/* ========================================= */
-.tab-content {
-    display: none;
-    padding: 15px;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ========================================= */
-/* LISTAS E CARDS DE INSUMOS                 */
-/* ========================================= */
-.lista-card h2 {
-    font-size: 1rem;
-    color: #555;
-    margin: 10px 0 15px 5px;
-    font-weight: bold;
-}
-
-.lista-insumos {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.item-insumo {
-    background: white;
-    border-radius: 15px;
-    padding: 18px;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    border-left: 10px solid #ddd; /* Cor padrão */
-}
-
-/* Cores de Status (Permanente) */
-.nivel-critico { border-left-color: #f44336; background-color: #fff1f0; } /* Vermelho: <= 2 */
-.nivel-alerta { border-left-color: #ffc107; background-color: #fffbe6; }  /* Amarelo: 3 a 5 */
-.nivel-ok { border-left-color: #4CAF50; background-color: #f0fff4; }      /* Verde: > 5 */
-
-.item-info .nome {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #222;
-}
-
-.item-info .log {
-    font-size: 0.75rem;
-    color: #777;
-    margin-top: 6px;
-}
-
-/* CONTROLES DE QUANTIDADE */
-.item-controles {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(0,0,0,0.03);
-    padding: 10px;
-    border-radius: 12px;
-}
-
-.item-controles button {
-    width: 55px; /* Botões grandes para o dedo */
-    height: 55px;
-    border-radius: 12px;
-    border: none;
-    background: white;
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #2c5e2e;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.item-controles input {
-    width: 60px;
-    border: none;
-    background: transparent;
-    text-align: center;
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #333;
-}
-
-.btn-deletar {
-    background: none !important;
-    box-shadow: none !important;
-    color: #999 !important;
-    font-size: 1.3rem !important;
-}
-
-/* ========================================= */
-/* BARRA DE NAVEGAÇÃO INFERIOR (BOTTOM NAV)  */
-/* ========================================= */
+/* BARRA INFERIOR BRANCA */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 75px;
-    background: white;
+    background: #ffffff;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
     z-index: 2000;
-    padding-bottom: env(safe-area-inset-bottom); /* Suporte para "notch" do iPhone */
+    padding: 0 10px;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* ITENS LATERAIS */
 .nav-item {
     flex: 1;
     border: none;
@@ -255,74 +24,62 @@ header h1 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #8e8e93;
+    color: #9da3b4; /* Cor cinza da imagem */
     transition: 0.2s;
-    padding: 10px 0;
-}
-
-.nav-item .icon {
-    font-size: 1.5rem;
-    margin-bottom: 4px;
-}
-
-.nav-item .label {
-    font-size: 0.75rem;
-    font-weight: 500;
 }
 
 .nav-item.active {
-    color: #2c5e2e;
-}
-
-.nav-item.active .icon {
-    transform: scale(1.1);
-}
-
-/* ========================================= */
-/* FORMULÁRIO DE CADASTRO                    */
-/* ========================================= */
-.form-container {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.form-container h2 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #2c5e2e;
-    margin-bottom: 20px;
-}
-
-#form-adicionar-item input, 
-#form-adicionar-item select {
-    width: 100%;
-    height: 55px;
-    padding: 0 15px;
-    margin-bottom: 15px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    background-color: #f9f9f9;
-}
-
-#form-adicionar-item button {
-    width: 100%;
-    height: 60px;
-    background-color: #2c5e2e;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    color: #2c3e50; /* Cor escura ativa */
     font-weight: bold;
-    margin-top: 10px;
 }
 
-/* ========================================= */
-/* ESTADOS ESPECIAIS                         */
-/* ========================================= */
-.congelado {
-    opacity: 0.7;
-    pointer-events: none; /* Opcional: impede cliques múltiplos durante o salvamento */
+.nav-item .icon {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+}
+
+.nav-item .label {
+    font-size: 0.65rem;
+    text-transform: capitalize;
+}
+
+/* BOTÃO CENTRAL (+) IGUAL À IMAGEM */
+.nav-center-wrapper {
+    position: relative;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-item-center {
+    position: absolute;
+    top: -45px; /* Faz ele flutuar para cima */
+    width: 65px;
+    height: 65px;
+    background: #1a1c29; /* Cor azul escuro/preto da imagem */
+    border-radius: 50%;
+    border: 5px solid #ffffff; /* Borda branca grossa para o efeito de recorte */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.nav-item-center .icon-plus {
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 300;
+}
+
+.nav-item-center:active {
+    transform: scale(0.9);
+    background: #2c5e2e;
+}
+
+/* AJUSTE PARA O CONTEÚDO TUDO */
+#container-tudo .lista-card {
+    box-shadow: none;
+    padding: 0;
 }
