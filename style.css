@@ -1,85 +1,93 @@
-/* BARRA INFERIOR BRANCA */
-.bottom-nav {
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    font-family: -apple-system, system-ui, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding-bottom: 90px;
+}
+
+/* TELA LOGIN */
+#tela-login {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 75px;
-    background: #ffffff;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
-    z-index: 2000;
-    padding: 0 10px;
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* ITENS LATERAIS */
-.nav-item {
-    flex: 1;
-    border: none;
-    background: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #9da3b4; /* Cor cinza da imagem */
-    transition: 0.2s;
-}
-
-.nav-item.active {
-    color: #2c3e50; /* Cor escura ativa */
-    font-weight: bold;
-}
-
-.nav-item .icon {
-    font-size: 1.4rem;
-    margin-bottom: 2px;
-}
-
-.nav-item .label {
-    font-size: 0.65rem;
-    text-transform: capitalize;
-}
-
-/* BOTÃO CENTRAL (+) IGUAL À IMAGEM */
-.nav-center-wrapper {
-    position: relative;
-    width: 80px;
-    display: flex;
-    justify-content: center;
-}
-
-.nav-item-center {
-    position: absolute;
-    top: -45px; /* Faz ele flutuar para cima */
-    width: 65px;
-    height: 65px;
-    background: #1a1c29; /* Cor azul escuro/preto da imagem */
-    border-radius: 50%;
-    border: 5px solid #ffffff; /* Borda branca grossa para o efeito de recorte */
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.nav-item-center .icon-plus {
-    color: white;
-    font-size: 2.2rem;
-    font-weight: 300;
-}
-
-.nav-item-center:active {
-    transform: scale(0.9);
+    top: 0; left: 0; width: 100%; height: 100%;
     background: #2c5e2e;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; padding: 20px;
 }
+.login-container {
+    background: white; padding: 30px; border-radius: 20px;
+    width: 100%; max-width: 380px; text-align: center;
+}
+#form-login input, #form-login button {
+    width: 100%; height: 50px; margin-bottom: 15px;
+    border-radius: 10px; border: 1px solid #ddd; font-size: 16px;
+}
+#form-login button { background: #4CAF50; color: white; border: none; font-weight: bold; }
 
-/* AJUSTE PARA O CONTEÚDO TUDO */
-#container-tudo .lista-card {
-    box-shadow: none;
-    padding: 0;
+/* HEADER */
+header {
+    background: #2c5e2e; color: white; padding: 15px;
+    text-align: center; position: sticky; top: 0; z-index: 1000;
 }
+header h1 { margin: 0; font-size: 1.1rem; }
+.user-info { font-size: 0.7rem; margin-top: 5px; opacity: 0.8; }
+#btn-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.6rem; }
+
+/* ABAS */
+.tab-content { display: none; padding: 15px; }
+.tab-content.active { display: block; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* CARDS E STATUS */
+.item-insumo {
+    background: white; border-radius: 12px; padding: 15px;
+    margin-bottom: 12px; display: flex; flex-direction: column;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 8px solid #ddd;
+}
+.nivel-critico { border-left-color: #f44336; background: #fff1f0; } /* <= 2 */
+.nivel-alerta { border-left-color: #ffc107; background: #fffbe6; }  /* 3 a 5 */
+.nivel-ok { border-left-color: #4CAF50; background: #f0fff4; }      /* > 5 */
+
+.item-info .nome { font-weight: bold; font-size: 1rem; }
+.item-info .log { font-size: 0.7rem; color: #888; margin-top: 4px; }
+
+.item-controles {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #f8f9fa; padding: 8px; border-radius: 8px; margin-top: 10px;
+}
+.item-controles button { width: 45px; height: 45px; border-radius: 8px; border: none; background: white; font-size: 1.3rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.item-controles input { width: 50px; border: none; background: transparent; text-align: center; font-size: 1.1rem; font-weight: bold; }
+
+/* TAB BAR ESTILO IMAGEM */
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+    background: #ffffff; display: flex; justify-content: space-around;
+    align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    z-index: 2000; padding: 0 10px 15px 10px;
+}
+.nav-item {
+    flex: 1; border: none; background: none;
+    display: flex; flex-direction: column; align-items: center;
+    color: #9da3b4; transition: 0.2s;
+}
+.nav-item.active { color: #1a1c29; font-weight: bold; }
+.nav-item .icon { font-size: 1.3rem; margin-bottom: 2px; }
+.nav-item .label { font-size: 0.65rem; }
+
+.nav-center-wrapper { position: relative; width: 70px; }
+.nav-item-center {
+    position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 60px; background: #1a1c29;
+    border-radius: 50%; border: 5px solid #ffffff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+}
+.nav-item-center .icon-plus { color: white; font-size: 2rem; }
+
+/* FORM */
+.form-container { background: white; padding: 20px; border-radius: 15px; }
+#form-adicionar-item input, #form-adicionar-item select, #form-adicionar-item button {
+    width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px;
+}
+#form-adicionar-item button { background: #2c5e2e; color: white; border: none; font-weight: bold; }
