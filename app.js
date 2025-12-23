@@ -14,34 +14,45 @@ const insumosCollection = db.collection('insumos');
 
 let cooldowns = {};
 
-// TROCA DE ABAS COM LÓGICA DE MOVIMENTAÇÃO DE LISTAS
+// TROCA DE ABAS OTIMIZADA (SEM MOVER DOM)
 function switchTab(tabId) {
-    if(tabId === 'view-sair') { auth.signOut(); return; }
-
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    // 1. Resetar botões da nav
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-    const target = document.getElementById(tabId);
-    if(target) target.classList.add('active');
-
+    
+    // 2. Elementos das seções
+    const viewAdd = document.getElementById('view-adicionar');
+    const displayListas = document.getElementById('display-listas');
+    const secPerm = document.getElementById('secao-permanente');
+    const secVar = document.getElementById('secao-variavel');
     const navItems = document.querySelectorAll('.nav-item');
-    if (tabId === 'view-tudo') navItems[0].classList.add('active');
-    if (tabId === 'view-permanente') navItems[1].classList.add('active');
-    if (tabId === 'view-variavel') navItems[2].classList.add('active');
 
-    const containerTudo = document.getElementById('container-tudo');
-    const lp = document.getElementById('lista-permanente');
-    const lv = document.getElementById('lista-variavel');
-
-    // Move as listas fisicamente no HTML dependendo da aba
+    // 3. Lógica de visibilidade instantânea
     if (tabId === 'view-tudo') {
-        containerTudo.appendChild(lp.closest('.lista-card') || lp);
-        containerTudo.appendChild(lv.closest('.lista-card') || lv);
-    } else if (tabId === 'view-permanente') {
-        document.querySelector('#view-permanente .lista-card').appendChild(lp);
-    } else if (tabId === 'view-variavel') {
-        document.querySelector('#view-variavel .lista-card').appendChild(lv);
+        viewAdd.classList.remove('active');
+        displayListas.style.display = 'block';
+        secPerm.style.display = 'block';
+        secVar.style.display = 'block';
+        navItems[0].classList.add('active');
+    } 
+    else if (tabId === 'view-permanente') {
+        viewAdd.classList.remove('active');
+        displayListas.style.display = 'block';
+        secPerm.style.display = 'block';
+        secVar.style.display = 'none';
+        navItems[1].classList.add('active');
+    } 
+    else if (tabId === 'view-variavel') {
+        viewAdd.classList.remove('active');
+        displayListas.style.display = 'block';
+        secPerm.style.display = 'none';
+        secVar.style.display = 'block';
+        navItems[2].classList.add('active');
+    } 
+    else if (tabId === 'view-adicionar') {
+        viewAdd.classList.add('active');
+        displayListas.style.display = 'none';
     }
+
     window.scrollTo(0,0);
 }
 
@@ -123,7 +134,7 @@ window.handleUpdate = (id, qtd, alt) => {
     insumosCollection.doc(id).update({ quantidade: nova, ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp() });
 };
 
-window.deletar = (id) => { if (confirm("Excluir?")) insumosCollection.doc(id).delete(); };
+window.deletar = (id) => { if (confirm("Excluir item?")) insumosCollection.doc(id).delete(); };
 
 document.getElementById('form-login').addEventListener('submit', e => {
     e.preventDefault();
@@ -138,5 +149,8 @@ document.getElementById('form-adicionar-item').addEventListener('submit', e => {
     const n = document.getElementById('nome-item').value;
     const c = document.getElementById('categoria-item').value;
     insumosCollection.add({ nome: n, categoria: c, quantidade: 0, ultimaAlteracao: firebase.firestore.FieldValue.serverTimestamp() })
-        .then(() => { document.getElementById('form-adicionar-item').reset(); switchTab(c === 'permanente' ? 'view-permanente' : 'view-variavel'); });
+        .then(() => { 
+            document.getElementById('form-adicionar-item').reset(); 
+            switchTab('view-tudo'); // Volta para o painel após cadastrar
+        });
 });
